@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}My Map App{% endblock %}</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- For social media icons -->
+
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <!-- Allow additional head content -->
+    {% block head %}{% endblock %}
+    <script>
+        // Set selectedStationId to null on page load
+        window.onload = function() {
+            localStorage.setItem('selectedStationId', 'null');
+        };
+    </script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ url_for('root.home') }}" class="navbar-brand">
+                Flask Web App
+                {% if 'user_id' in session %}
+                <span  style=" display: flex; align-items: center; margin-right: 10px; font-size:20px; margin-top: 4px; color:goldenrod;">
+                    Welcome {{ session['username'] }}
+                </span>
+                {% endif %}
+            </a>
+            
+            <div class="navbar-links">
+                <div class="navbar-links">
+                    {% if 'user_id' in session %}
+                    
+                    <a href="{{ url_for('reviews.user_reviews') }}" class="navbar-link">
+                        Reviews
+                       </a>
+                        <a href="#" class="navbar-link" onclick="navigateToAddReview(event)">Add Review</a> <!-- Add Review Button -->
+                        <a href="{{ url_for('auth.logout') }}" class="navbar-link">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="navbar-link">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="navbar-link">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Feedback Section -->
+    <div id="feedback"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+
+    <!-- Additional Scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+<script>
+    function navigateToAddReview(event) {
+        event.preventDefault();  // Prevent the default anchor behavior
+        const selectedStationId = localStorage.getItem('selectedStationId');
+        if (selectedStationId && selectedStationId !== 'null') {
+            window.location.href = "{{ url_for('reviews.add_review_page') }}?station_id=" + selectedStationId;
+        } else {
+            alert("Please select a station first.");
+        }
+    }
+</script>
