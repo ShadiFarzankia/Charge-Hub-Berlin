@@ -74,6 +74,8 @@ tests/                # Unit & Integration Tests
 ---
 
 ## 🖥️ User Interface
+![App Interface](app-face.png)
+
 
 - Interactive map with clickable charging-station markers  
 - Login / Register pages for user authentication  
@@ -147,6 +149,10 @@ python app.py
 # Run tests
 pytest --cov=app
 ```
+---
+
+For full documentaion, see [`projec-documentaiton.pdf`](project_documentation.pdf).
+
 ---
 Authors: *Shadi Farzankia, Farel Arden, Rene Heldmaier, Hameez Ahmad*  
 Date: *14 January 2025*  
